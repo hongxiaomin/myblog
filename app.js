@@ -41,6 +41,8 @@ app.use(function(req, res, next) {
 });
 
 // error handler
+//错误处理中间件有四个参数 ，第一个参数是错误对象
+//如果有中间件出错了，会把请求转交给错误处理中间件来处理
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
