@@ -1,14 +1,15 @@
 var express = require('express');
 let models =require('../models/index');
 var router = express.Router();
+const auth = require('../middleware/auth');
 const util = require('../util');
 
 /* GET users listing.
  * 只要写后半段就可以了，不同path的全部内容 */
-router.get('/reg', function(req, res, next) {
+router.get('/reg',auth.checkNotLogin, function(req, res, next) {
   res.render('user/reg',{title:'注册'});
 });
-router.post('/reg',(req,res,next)=>{
+router.post('/reg',auth.checkNotLogin,(req,res,next)=>{
     let user=req.body;
     models.User.find({"username":user.username},(err,docs)=>{
         if(err){
@@ -21,6 +22,8 @@ router.post('/reg',(req,res,next)=>{
             }else{
                 if(user.password===user.repassword){
                     user.password=util.md5(user.password);
+                    //增加一个用户头像
+                    user.avatar = 'https://secure.gravatar.com/avatar/'+util.md5(user.email)+'?s=64';
                     models.User.create(user,(err,doc)=>{
                         console.log(doc);
                         req.flash('success','注册成功！');
@@ -34,10 +37,10 @@ router.post('/reg',(req,res,next)=>{
         }
     });
 });
-router.get('/login',(req,res,next)=>{
+router.get('/login',auth.checkNotLogin,(req,res,next)=>{
     res.render('user/login',{title:'登录'});
 });
-router.post('/login',(req,res,next)=>{
+router.post('/login',auth.checkNotLogin,(req,res,next)=>{
     let user=req.body;
     console.log('user',user);
     user.password=util.md5(user.password);
@@ -61,9 +64,9 @@ router.post('/login',(req,res,next)=>{
 });
 
 
-router.get('/logout',(req,res,next)=>{
+router.get('/logout',auth.checkLogin,(req,res,next)=>{
     req.session.user=null;
-    req.flash('success','用户退出成功！')
+    req.flash('success','用户退出成功！');
     res.redirect('/');
 });
 module.exports = router;

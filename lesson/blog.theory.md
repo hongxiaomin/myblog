@@ -100,6 +100,16 @@ var flash = require('connect-flash');
 app.use(flash());
 ```
 #### 在发表文章的路由里放置flash提示信息
+### 文章内容使用Markdown
+#### 安装markdown插件
+``` 
+npm install markdown --save
+```
+### 发表文章时可以上传图片
+``` 
+npm install multer --save
+```
+
 
 
 

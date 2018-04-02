@@ -1,5 +1,25 @@
 <%- include include/header.html%>
-    <div class="container">
-        <%= title %>
-    </div>
+  <%
+    articles.forEach((article)=>{
+        %>
+            <div class="media">
+                <div class="media-left media-middle">
+                    <a href="#">
+                        <img class="media-object" src="<%= article.user.avatar%>" alt="">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading"><%= article.title%></h4>
+                    <p><%- article.content%></p>
+                </div>
+                <div class="media-bottom">
+                    作者：<span><%= article.user.username %></span>
+                    <br>
+                    发表时间：<span><%= article.createAt.toLocaleString()%></span>
+
+                </div>
+            </div>
+        <%
+    })
+    %>
 <%- include include/footer.html%>
