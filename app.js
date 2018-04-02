@@ -13,6 +13,13 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var articlesRouter=require('./routes/articles');
+
+var session = require('express-session');//session 依赖于cookie，所以要引用在cookie后面
+
+var MongoStore = require('connect-mongo')(session);//将session会话保存到数据库
+
+var flash = require('connect-flash');
+var config = require('./config');
 //得到app
 var app = express();
 
@@ -31,6 +38,22 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 //cookie处理中间件 req.cookies res.cookie(key,value)
 app.use(cookieParser());
+app.use(session({
+    secret:'hxm',
+    resave:true,//每次响应结束后都保存一下session数据
+    saveUninitialized:true,//保存新创建但未初始化的session
+    store:new MongoStore({
+        url:config.dbUrl
+    })
+}));
+app.use(flash());//依赖于session
+app.use((req,res,next)=>{
+  //res.locals才是真正的渲染模板的对象
+  res.locals.user=req.session.user;
+  res.locals.success=req.flash('success').toString();
+  res.locals.error=req.flash('error').toString();
+  next();
+});
 //静态文件服务中间件 指定一个绝对目录的路径作为静态文件的根目录
 app.use(express.static(path.join(__dirname, 'public')));
 //指定路由

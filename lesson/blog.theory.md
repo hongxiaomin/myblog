@@ -78,4 +78,29 @@ this is b.ejs
 - /articles/post:发表文章
 - /users/logout:登出
 
+### 安装会话支持模式
+使用express-session和connect-mongo模块实现了将会话信息存储到MongoDB中。
+``` 
+npm install express-session --save
+npm install connect-mongo --save
+```
+修改app.js
+
+### 页面通知
+我们需要引入flash模块来实现页面通知（即成功与错误信息的显示）的功能。
+#### 什么是flash
+我们所说的flash即connect-falsh模块（https://github.com/jaredhanson/connect-flash），flash是一个在session中用于存储信息的特定区域。信息写入flash，下一次显示完毕后即被清楚。典型的应用是结合重定向的功能，确保信息是提供给下一个被渲染的页面。
+#### 安装模块
+``` 
+npm install connect-flash --save
+```
+#### 在app.js中添加调用此模块
+``` 
+var flash = require('connect-flash');
+app.use(flash());
+```
+#### 在发表文章的路由里放置flash提示信息
+
+
+
 
