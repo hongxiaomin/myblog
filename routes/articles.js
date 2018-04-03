@@ -1,8 +1,8 @@
-var express = require('express');
+const express = require('express');
+const multer  = require('multer');
 const auth = require('../middleware/auth');
 const models = require('../models/index');
 
-var multer  = require('multer');
 //指定存储目录和文件名
 var storage = multer.diskStorage({
     //目标路径
